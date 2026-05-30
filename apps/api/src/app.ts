@@ -1,6 +1,7 @@
 import Fastify, { fastify, FastifyReply, FastifyRequest } from "fastify";
 
 import { authRoutes } from "./modules/auth/auth.routes.js";
+import { userRoutes } from "./modules/user/user.routes.js";
 
 export const app = Fastify({
   logger: true,
@@ -15,6 +16,10 @@ app.get("/", async () => {
 
 app.register(authRoutes, {
   prefix: "/api/auth",
+});
+
+app.register(userRoutes, {
+  prefix: "/api/users",
 });
 
 app.setErrorHandler((error, request, reply) => {
