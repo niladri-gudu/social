@@ -3,6 +3,7 @@ import Fastify, { fastify, FastifyReply, FastifyRequest } from "fastify";
 import { authRoutes } from "./modules/auth/auth.routes.js";
 import { userRoutes } from "./modules/user/user.routes.js";
 import { followRoutes } from "./modules/follows/follow.routes.js";
+import { postRoutes } from "./modules/posts/post.routes.js";
 
 export const app = Fastify({
   logger: true,
@@ -25,6 +26,10 @@ app.register(userRoutes, {
 
 app.register(followRoutes, {
   prefix: "/api/follows",
+});
+
+app.register(postRoutes, {
+  prefix: "/api/posts",
 });
 
 app.setErrorHandler((error, request, reply) => {
