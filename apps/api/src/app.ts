@@ -4,6 +4,7 @@ import { authRoutes } from "./modules/auth/auth.routes.js";
 import { userRoutes } from "./modules/user/user.routes.js";
 import { followRoutes } from "./modules/follows/follow.routes.js";
 import { postRoutes } from "./modules/posts/post.routes.js";
+import { likeRoutes } from "./modules/likes/like.routes.js";
 
 export const app = Fastify({
   logger: true,
@@ -30,6 +31,10 @@ app.register(followRoutes, {
 
 app.register(postRoutes, {
   prefix: "/api/posts",
+});
+
+app.register(likeRoutes, {
+  prefix: "/api/likes",
 });
 
 app.setErrorHandler((error, request, reply) => {
