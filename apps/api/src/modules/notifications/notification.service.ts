@@ -1,4 +1,5 @@
 import { prisma } from "@repo/db";
+import { redis, redisKeys } from "@repo/redis";
 
 export class NotificationService {
   static async createFollowNotification(senderId: string, receiverId: string) {
@@ -6,13 +7,21 @@ export class NotificationService {
       return;
     }
 
-    return prisma.notification.create({
+    const notification = await prisma.notification.create({
       data: {
         type: "FOLLOW",
         senderId,
         receiverId,
       },
     });
+
+    console.log("NOTIFICATION CREATED");
+
+    await redis.incr(redisKeys.notificationCount(receiverId));
+
+    console.log("REDIS INCR", redisKeys.notificationCount(receiverId));
+    
+    return notification;
   }
 
   static async createLikeNotification(
@@ -24,7 +33,7 @@ export class NotificationService {
       return;
     }
 
-    return prisma.notification.create({
+    const notification = await prisma.notification.create({
       data: {
         type: "LIKE",
         senderId,
@@ -32,6 +41,10 @@ export class NotificationService {
         postId,
       },
     });
+
+    await redis.incr(redisKeys.notificationCount(receiverId));
+
+    return notification;
   }
 
   static async createCommentNotification(
@@ -44,7 +57,7 @@ export class NotificationService {
       return;
     }
 
-    return prisma.notification.create({
+    const notification = await prisma.notification.create({
       data: {
         type: "COMMENT",
         senderId,
@@ -53,6 +66,10 @@ export class NotificationService {
         commentId,
       },
     });
+
+    await redis.incr(redisKeys.notificationCount(receiverId));
+
+    return notification;
   }
 
   static async getNotifications(userId: string) {
@@ -88,12 +105,22 @@ export class NotificationService {
   }
 
   static async getUnreadCount(userId: string) {
+    const cached = await redis.get(redisKeys.notificationCount(userId));
+
+    if (cached !== null) {
+      return {
+        count: Number(cached),
+      };
+    }
+
     const count = await prisma.notification.count({
       where: {
         receiverId: userId,
         isRead: false,
       },
     });
+
+    await redis.set(redisKeys.notificationCount(userId), count);
 
     return {
       count,
@@ -115,7 +142,7 @@ export class NotificationService {
       throw new Error("Unauthorized");
     }
 
-    return prisma.notification.update({
+    const updatedNotification = await prisma.notification.update({
       where: {
         id: notificationId,
       },
@@ -123,10 +150,14 @@ export class NotificationService {
         isRead: true,
       },
     });
+
+    await redis.decr(redisKeys.notificationCount(userId));
+
+    return updatedNotification;
   }
 
   static async markAllAsRead(userId: string) {
-    return prisma.notification.updateMany({
+    const updatedNotifications = await prisma.notification.updateMany({
       where: {
         receiverId: userId,
         isRead: false,
@@ -135,5 +166,9 @@ export class NotificationService {
         isRead: true,
       },
     });
+
+    await redis.set(redisKeys.notificationCount(userId), 0);
+
+    return updatedNotifications;
   }
 }

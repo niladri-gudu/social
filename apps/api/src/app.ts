@@ -8,6 +8,7 @@ import { likeRoutes } from "./modules/likes/like.routes.js";
 import { commentRoutes } from "./modules/comments/comment.routes.js";
 import { notificationRoutes } from "./modules/notifications/notification.routes.js";
 import { feedRoutes } from "./modules/feed/feed.routes.js";
+import { devRoutes } from "./modules/dev/dev.routes.js";
 
 export const app = Fastify({
   logger: true,
@@ -51,6 +52,12 @@ app.register(notificationRoutes, {
 app.register(feedRoutes, {
   prefix: "/api/feed",
 });
+
+if (process.env.NODE_ENV === "development") {
+  app.register(devRoutes, {
+    prefix: "/api/dev",
+  });
+}
 
 app.setErrorHandler((error, request, reply) => {
   request.log.error(error);
