@@ -50,10 +50,4 @@ export class PostController {
 
     return reply.send(posts);
   }
-
-  static async getFeed(request: FastifyRequest, reply: FastifyReply) {
-    const posts = await PostService.getFeed(request.user!.userId);
-
-    return reply.send(posts);
-  }
 }

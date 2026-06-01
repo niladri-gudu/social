@@ -12,15 +12,7 @@ export async function postRoutes(app: FastifyInstance) {
     },
     PostController.createPost,
   );
-
-  app.get(
-    "/feed",
-    {
-      preHandler: authMiddleware,
-    },
-    PostController.getFeed,
-  );
-
+  
   app.get("/user/:userId", PostController.getUserPosts);
 
   app.get("/:postId", PostController.getPost);

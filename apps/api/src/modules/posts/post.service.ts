@@ -101,44 +101,4 @@ export class PostService {
       },
     });
   }
-
-  static async getFeed(userId: string) {
-    const following = await prisma.follow.findMany({
-      where: {
-        followerId: userId,
-      },
-      select: {
-        followingId: true,
-      },
-    });
-
-    const followingIds = following.map((f) => f.followingId);
-
-    return prisma.post.findMany({
-      where: {
-        authorId: {
-          in: followingIds,
-        },
-      },
-      include: {
-        author: {
-          select: {
-            id: true,
-            username: true,
-            avatarUrl: true,
-          },
-        },
-        _count: {
-          select: {
-            likes: true,
-            comments: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: 20,
-    });
-  }
 }
