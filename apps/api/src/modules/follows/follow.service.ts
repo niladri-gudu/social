@@ -1,5 +1,5 @@
 import { prisma } from "@repo/db";
-import { NotificationService } from "../notifications/notification.service.js";
+import { notificationQueue } from "@repo/queues";
 
 export class FollowService {
   static async followUser(followerId: string, followingId: string) {
@@ -27,7 +27,11 @@ export class FollowService {
       },
     });
 
-    await NotificationService.createFollowNotification(followerId, followingId);
+    await notificationQueue.add("follow-notification", {
+      actorId: followerId,
+      recipientId: followingId,
+      type: "FOLLOW",
+    });
 
     return {
       success: true,

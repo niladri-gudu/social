@@ -20,9 +20,18 @@ importers:
 
   apps/api:
     dependencies:
+      '@repo/auth':
+        specifier: workspace:^
+        version: link:../../packages/auth
       '@repo/db':
         specifier: workspace:^
         version: link:../../packages/db
+      '@repo/notifications':
+        specifier: workspace:^
+        version: link:../../packages/notification
+      '@repo/queues':
+        specifier: workspace:^
+        version: link:../../packages/queues
       '@repo/redis':
         specifier: workspace:^
         version: link:../../packages/redis
@@ -54,46 +63,6 @@ importers:
       dotenv-cli:
         specifier: ^7.4.4
         version: 7.4.4
-      tsup:
-        specifier: ^8.5.1
-        version: 8.5.1(jiti@2.7.0)(postcss@8.5.15)(tsx@4.22.3)(typescript@5.9.3)
-      tsx:
-        specifier: ^4.22.3
-        version: 4.22.3
-      typescript:
-        specifier: ^5.7.2
-        version: 5.9.3
-
-  apps/backend:
-    dependencies:
-      '@repo/db':
-        specifier: workspace:^
-        version: link:../../packages/db
-      bcrypt:
-        specifier: ^6.0.0
-        version: 6.0.0
-      dotenv:
-        specifier: ^16.4.7
-        version: 16.6.1
-      fastify:
-        specifier: ^5.8.5
-        version: 5.8.5
-      jsonwebtoken:
-        specifier: ^9.0.2
-        version: 9.0.3
-      zod:
-        specifier: ^3.24.1
-        version: 3.25.76
-    devDependencies:
-      '@types/bcrypt':
-        specifier: ^6.0.0
-        version: 6.0.0
-      '@types/jsonwebtoken':
-        specifier: ^9.0.7
-        version: 9.0.10
-      '@types/node':
-        specifier: ^25.9.1
-        version: 25.9.1
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(jiti@2.7.0)(postcss@8.5.15)(tsx@4.22.3)(typescript@5.9.3)
@@ -180,6 +149,9 @@ importers:
       '@repo/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@repo/notifications':
+        specifier: workspace:^
+        version: link:../../packages/notification
       '@repo/redis':
         specifier: workspace:*
         version: link:../../packages/redis
@@ -271,6 +243,35 @@ importers:
       zod:
         specifier: ^3.24.1
         version: 3.25.76
+    devDependencies:
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+
+  packages/notification:
+    dependencies:
+      '@repo/db':
+        specifier: workspace:*
+        version: link:../db
+      '@repo/redis':
+        specifier: workspace:*
+        version: link:../redis
+    devDependencies:
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+
+  packages/queues:
+    dependencies:
+      '@repo/events':
+        specifier: workspace:*
+        version: link:../events
+      '@repo/redis':
+        specifier: workspace:*
+        version: link:../redis
+      bullmq:
+        specifier: ^5.34.2
+        version: 5.77.6
     devDependencies:
       typescript:
         specifier: ^5.7.2

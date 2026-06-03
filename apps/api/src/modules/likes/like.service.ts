@@ -1,5 +1,5 @@
 import { prisma } from "@repo/db";
-import { NotificationService } from "../notifications/notification.service.js";
+import { notificationQueue } from "@repo/queues";
 
 export class LikeService {
   static async likePost(userId: string, postId: string) {
@@ -34,11 +34,12 @@ export class LikeService {
     });
 
     if (post.authorId !== userId) {
-      await NotificationService.createLikeNotification(
-        userId,
-        post.authorId,
+      await notificationQueue.add("like-notification", {
+        actorId: userId,
+        recipientId: post.authorId,
+        type: "LIKE",
         postId,
-      );
+      });
     }
 
     return {

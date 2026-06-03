@@ -10,7 +10,10 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@repo/auth": "workspace:^",
     "@repo/db": "workspace:^",
+    "@repo/notifications": "workspace:^",
+    "@repo/queues": "workspace:^",
     "@repo/redis": "workspace:^",
     "bcrypt": "^6.0.0",
     "dotenv": "^16.4.7",

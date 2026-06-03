@@ -20,7 +20,7 @@ export class NotificationService {
     await redis.incr(redisKeys.notificationCount(receiverId));
 
     console.log("REDIS INCR", redisKeys.notificationCount(receiverId));
-    
+
     return notification;
   }
 

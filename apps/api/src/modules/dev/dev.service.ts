@@ -1,7 +1,6 @@
 import { prisma } from "@repo/db";
 
-import { NotificationService } from "../notifications/notification.service.js";
-
+import { NotificationService } from "@repo/notifications";
 export class DevService {
   static async generateNotifications(count: number = 10) {
     const users = await prisma.user.findMany({

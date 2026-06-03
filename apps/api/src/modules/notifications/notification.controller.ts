@@ -1,7 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import { NotificationService } from "./notification.service.js";
-
+import { NotificationService } from "@repo/notifications";
 type NotificationParams = {
   id: string;
 };

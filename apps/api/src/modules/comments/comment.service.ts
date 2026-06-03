@@ -1,8 +1,7 @@
 import { prisma } from "@repo/db";
 
-import { NotificationService } from "../notifications/notification.service.js";
-
 import type { CreateCommentInput } from "./comment.schema.js";
+import { notificationQueue } from "@repo/queues";
 
 export class CommentService {
   static async createComment(
@@ -38,12 +37,13 @@ export class CommentService {
     });
 
     if (post.authorId !== userId) {
-      await NotificationService.createCommentNotification(
-        userId,
-        post.authorId,
+      await notificationQueue.add("comment-notification", {
+        actorId: userId,
+        recipientId: post.authorId,
+        type: "COMMENT",
         postId,
-        comment.id,
-      );
+        commentId: comment.id,
+      });
     }
 
     return comment;
