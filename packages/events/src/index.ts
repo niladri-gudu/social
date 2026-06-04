@@ -22,4 +22,13 @@ export const notificationJobSchema = z.object({
   commentId: z.string().cuid().optional(),
 });
 
+export const realtimeNotificationSchema = z.object({
+  type: z.literal("NOTIFICATION_CREATED"),
+
+  unreadCount: z.number(),
+
+  notification: notificationJobSchema,
+});
+
 export type NotificationJob = z.infer<typeof notificationJobSchema>;
+export type RealtimeNotification = z.infer<typeof realtimeNotificationSchema>;

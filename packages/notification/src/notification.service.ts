@@ -15,11 +15,7 @@ export class NotificationService {
       },
     });
 
-    console.log("NOTIFICATION CREATED");
-
     await redis.incr(redisKeys.notificationCount(receiverId));
-
-    console.log("REDIS INCR", redisKeys.notificationCount(receiverId));
 
     return notification;
   }
@@ -125,6 +121,12 @@ export class NotificationService {
     return {
       count,
     };
+  }
+
+  static async getCachedUnreadCount(userId: string) {
+    const count = await redis.get(redisKeys.notificationCount(userId));
+
+    return Number(count ?? 0);
   }
 
   static async markAsRead(notificationId: string, userId: string) {

@@ -23,8 +23,6 @@ export function initializeSocket(server: HttpServer) {
         userId: string;
       };
 
-      console.log("SOCKET JWT PAYLOAD", payload);
-
       socket.data.userId = payload.userId;
 
       next();

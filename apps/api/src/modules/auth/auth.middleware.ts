@@ -19,7 +19,6 @@ export async function authMiddleware(
 
   try {
     const secret = process.env.JWT_ACCESS_SECRET as string;
-    console.log("JWT_REFRESH_SECRET:", process.env.JWT_REFRESH_SECRET);
     const payload = jwt.verify(token, secret) as unknown as {
       userId: string;
     };

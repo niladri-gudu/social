@@ -2,7 +2,8 @@ import { io } from "socket.io-client";
 
 const socket = io("http://localhost:4000", {
   auth: {
-    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbXBzbGRkdGkwMDAwbHIyZ2VobWxyZm96IiwiaWF0IjoxNzgwNTc0OTU2LCJleHAiOjE3ODA1NzU4NTZ9.hJdhnj2QAMhs3UYGpG0XzRJPwU7NrDqI1WEgmaFY6Rc",
+    token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbXB6bXV4b2UwMDAwbHJ6NGc4ODJyNHh1IiwiaWF0IjoxNzgwNTg2MjMyLCJleHAiOjE3ODA1ODcxMzJ9.EodgxQbfqZNKBcDKBMsnLLgbRFW5QnNFza5iDzaKFPk",
   },
 });
 
@@ -10,8 +11,8 @@ socket.on("connect", () => {
   console.log("connected", socket.id);
 });
 
-socket.on("notification", (payload) => {
-  console.log("notification received", payload);
+socket.on("notification:created", (payload) => {
+  console.log("REALTIME NOTIFICATION", payload);
 });
 
 const serviceChecks = [

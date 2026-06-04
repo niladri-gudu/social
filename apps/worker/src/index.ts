@@ -2,6 +2,7 @@ import { Worker, QueueEvents } from "bullmq";
 import { PubSubChannel, QueueName, notificationJobSchema } from "@repo/events";
 import { createRedisConnection, publisher } from "@repo/redis";
 import { NotificationService } from "@repo/notifications";
+import { realtimeNotificationSchema } from "@repo/events";
 
 const connection = createRedisConnection();
 
@@ -36,9 +37,19 @@ const worker = new Worker(
         break;
     }
 
+    const unreadCount = await NotificationService.getCachedUnreadCount(
+      payload.recipientId,
+    );
+
+    const realtimeEvent = realtimeNotificationSchema.parse({
+      type: "NOTIFICATION_CREATED",
+      notification: payload,
+      unreadCount,
+    });
+
     await publisher.publish(
       PubSubChannel.Notifications,
-      JSON.stringify(payload),
+      JSON.stringify(realtimeEvent),
     );
 
     return { deliveredToPubSub: true };
