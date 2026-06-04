@@ -34,8 +34,8 @@ export class DevService {
       throw new Error("Need at least 2 users");
     }
 
-    const sender = users[0];
-    const receiver = users[1];
+    const sender = users[0]!;
+    const receiver = users[1]!;
 
     const post = await prisma.post.findFirst({
       where: {

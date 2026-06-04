@@ -12,6 +12,7 @@
   "dependencies": {
     "@repo/auth": "workspace:^",
     "@repo/db": "workspace:^",
+    "@repo/events": "workspace:^",
     "@repo/notifications": "workspace:^",
     "@repo/queues": "workspace:^",
     "@repo/redis": "workspace:^",
@@ -19,6 +20,7 @@
     "dotenv": "^16.4.7",
     "fastify": "^5.8.5",
     "jsonwebtoken": "^9.0.2",
+    "socket.io": "^4.8.1",
     "zod": "^3.24.1"
   },
   "devDependencies": {

@@ -26,6 +26,9 @@ importers:
       '@repo/db':
         specifier: workspace:^
         version: link:../../packages/db
+      '@repo/events':
+        specifier: workspace:^
+        version: link:../../packages/events
       '@repo/notifications':
         specifier: workspace:^
         version: link:../../packages/notification
@@ -47,6 +50,9 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.3
+      socket.io:
+        specifier: ^4.8.1
+        version: 4.8.3
       zod:
         specifier: ^3.24.1
         version: 3.25.76
@@ -88,7 +94,7 @@ importers:
         specifier: ^19.0.0
         version: 19.2.6(react@19.2.6)
       socket.io-client:
-        specifier: ^4.8.1
+        specifier: ^4.8.3
         version: 4.8.3
     devDependencies:
       '@types/node':
