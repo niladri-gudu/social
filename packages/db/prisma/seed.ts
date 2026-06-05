@@ -14,6 +14,7 @@ async function main() {
   await prisma.post.deleteMany();
   await prisma.session.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.failedJob.deleteMany();
 
   const passwordHash = await bcrypt.hash("password123", 10);
 
@@ -115,6 +116,35 @@ async function main() {
   }
 
   console.log(`✅ Created likes`);
+
+  await prisma.failedJob.createMany({
+    data: [
+      {
+        queueName: "notifications",
+        originalJobId: "job-1",
+        payload: {
+          recipientId: users[0].id,
+          actorId: users[1].id,
+          type: "FOLLOW",
+        },
+        error: "Redis connection timeout",
+        failedAt: new Date(),
+      },
+      {
+        queueName: "notifications",
+        originalJobId: "job-2",
+        payload: {
+          recipientId: users[0].id,
+          actorId: users[1].id,
+          type: "LIKE",
+        },
+        error: "Worker crashed",
+        failedAt: new Date(),
+      },
+    ],
+  });
+
+  console.log("✅ Created failed jobs");
 }
 
 main()

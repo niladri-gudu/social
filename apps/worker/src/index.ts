@@ -3,6 +3,7 @@ import { PubSubChannel, QueueName, notificationJobSchema } from "@repo/events";
 import { createRedisConnection, publisher } from "@repo/redis";
 import { NotificationService } from "@repo/notifications";
 import { realtimeNotificationSchema } from "@repo/events";
+import { prisma } from "@repo/db";
 
 const connection = createRedisConnection();
 
@@ -68,7 +69,20 @@ worker.on("completed", (job) => {
   console.log(`notification job ${job.id} completed`);
 });
 
-worker.on("failed", (job, error) => {
+worker.on("failed", async (job, error) => {
+  if (job && job.attemptsMade >= (job.opts.attempts ?? 0)) {
+    await prisma.failedJob.create({
+      data: {
+        queueName: QueueName.Notifications,
+        originalJobId: String(job.id),
+        payload: job.data,
+        error: error.message,
+        failedAt: new Date(),
+        status: "FAILED",
+      },
+    });
+  }
+
   console.error(`notification job ${job?.id} failed`, error);
 });
 

@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@repo/db": "workspace:^",
     "@repo/events": "workspace:*",
     "@repo/notifications": "workspace:^",
     "@repo/redis": "workspace:*",

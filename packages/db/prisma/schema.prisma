@@ -152,3 +152,30 @@ model Session {
 
   @@index([userId])
 }
+
+model FailedJob {
+  id String @id @default(cuid())
+
+  queueName     String
+  originalJobId String
+
+  payload Json
+  error   String
+
+  status FailedJobStatus @default(FAILED)
+
+  failedAt DateTime
+
+  replayedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([status])
+  @@index([queueName])
+  @@index([failedAt])
+}
+
+enum FailedJobStatus {
+  FAILED
+  REPLAYED
+}
