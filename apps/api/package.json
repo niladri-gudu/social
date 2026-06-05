@@ -14,6 +14,7 @@
     "@repo/db": "workspace:^",
     "@repo/events": "workspace:^",
     "@repo/notifications": "workspace:^",
+    "@repo/presence": "workspace:^",
     "@repo/queues": "workspace:^",
     "@repo/redis": "workspace:^",
     "bcrypt": "^6.0.0",

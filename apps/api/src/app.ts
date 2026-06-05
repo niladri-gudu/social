@@ -9,6 +9,7 @@ import { commentRoutes } from "./modules/comments/comment.routes.js";
 import { notificationRoutes } from "./modules/notifications/notification.routes.js";
 import { feedRoutes } from "./modules/feed/feed.routes.js";
 import { devRoutes } from "./modules/dev/dev.routes.js";
+import { presenceRoutes } from "./modules/presence/presence.routes.js";
 
 export const app = Fastify({
   logger: true,
@@ -52,6 +53,10 @@ app.register(notificationRoutes, {
 app.register(feedRoutes, {
   prefix: "/api/feed",
 });
+
+app.register(presenceRoutes, {
+  prefix: "/api/presence",
+})
 
 if (process.env.NODE_ENV === "development") {
   app.register(devRoutes, {

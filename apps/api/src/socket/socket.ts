@@ -1,6 +1,7 @@
 import { Server as HttpServer } from "http";
 import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
+import { PresenceService } from "@repo/presence";
 
 export let io: Server;
 
@@ -31,8 +32,10 @@ export function initializeSocket(server: HttpServer) {
     }
   });
 
-  io.on("connection", (socket) => {
+  io.on("connection", async (socket) => {
     const userId = socket.data.userId;
+
+    await PresenceService.markOnline(userId);
 
     socket.join(`user:${userId}`);
 
@@ -40,8 +43,12 @@ export function initializeSocket(server: HttpServer) {
 
     console.log(`joined room user:${userId}`);
 
-    socket.on("disconnect", () => {
-      console.log("socket disconnected", socket.id);
+    socket.on("disconnect", async (reason) => {
+      console.log("DISCONNECT EVENT", userId, reason);
+
+      await PresenceService.markOffline(userId);
+
+      console.log("MARKED OFFLINE", userId);
     });
   });
 

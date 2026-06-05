@@ -1,19 +1,7 @@
+"use client";
+
+import { useEffect } from "react";
 import { io } from "socket.io-client";
-
-const socket = io("http://localhost:4000", {
-  auth: {
-    token:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbXB6bXV4b2UwMDAwbHJ6NGc4ODJyNHh1IiwiaWF0IjoxNzgwNTg2MjMyLCJleHAiOjE3ODA1ODcxMzJ9.EodgxQbfqZNKBcDKBMsnLLgbRFW5QnNFza5iDzaKFPk",
-  },
-});
-
-socket.on("connect", () => {
-  console.log("connected", socket.id);
-});
-
-socket.on("notification:created", (payload) => {
-  console.log("REALTIME NOTIFICATION", payload);
-});
 
 const serviceChecks = [
   { name: "API", url: "http://localhost:4000/health" },
@@ -23,6 +11,24 @@ const serviceChecks = [
 ];
 
 export default function Home() {
+  useEffect(() => {
+    const socket = io("http://localhost:4000", {
+      auth: {
+        token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbXB6bXYzYTYwMDAzbHJ6NDhicmdlcGNtIiwiaWF0IjoxNzgwNjU1NTAwLCJleHAiOjE3ODA2NTY0MDB9.H6sC3F1y2Wwq6AowEYLRy14NkILdHINQh-b9TA62XCc",
+      },
+    });
+
+    socket.on("connect", () => {
+      console.log("connected", socket.id);
+    });
+
+    return () => {
+      console.log("disconnecting socket");
+      socket.disconnect();
+    };
+  }, []);
+
   return (
     <main className="min-h-screen px-6 py-8">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
