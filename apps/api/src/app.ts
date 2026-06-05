@@ -11,6 +11,7 @@ import { feedRoutes } from "./modules/feed/feed.routes.js";
 import { devRoutes } from "./modules/dev/dev.routes.js";
 import { presenceRoutes } from "./modules/presence/presence.routes.js";
 import { adminRoutes } from "./modules/admin/admin.routes.js";
+import { healthRoutes } from "./modules/health/health.routes.js";
 
 export const app = Fastify({
   logger: true,
@@ -21,6 +22,10 @@ app.get("/", async () => {
     success: true,
     message: "API Running",
   };
+});
+
+app.register(healthRoutes, {
+  prefix: "/health",
 });
 
 app.register(authRoutes, {

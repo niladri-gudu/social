@@ -10,6 +10,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@bull-board/api": "^7.1.5",
+    "@bull-board/fastify": "^7.1.5",
     "@repo/auth": "workspace:^",
     "@repo/db": "workspace:^",
     "@repo/events": "workspace:^",

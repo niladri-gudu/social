@@ -1,5 +1,6 @@
 import { prisma } from "@repo/db";
 import { notificationQueue } from "@repo/queues";
+import { redis, redisKeys } from "@repo/redis";
 
 export class AdminService {
   static async getFailedJobs() {
@@ -76,6 +77,42 @@ export class AdminService {
       replayedCount,
       totalJobs: total,
       recoveryRate,
+    };
+  }
+
+  static async getQueueMetrics() {
+    const counts = await notificationQueue.getJobCounts(
+      "waiting",
+      "active",
+      "completed",
+      "failed",
+      "delayed",
+      "paused",
+    );
+
+    return {
+      queue: "notifications",
+      ...counts,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  static async getWorkerMetrics() {
+    const processed =
+      Number(await redis.get(redisKeys.workerProcessedJobs)) || 0;
+
+    const failed = Number(await redis.get(redisKeys.workerFailedJobs)) || 0;
+
+    const total = processed + failed;
+
+    const successRate =
+      total === 0 ? 0 : Number(((processed / total) * 100).toFixed(2));
+
+    return {
+      processed,
+      failed,
+      total,
+      successRate,
     };
   }
 }

@@ -33,4 +33,16 @@ export class AdminController {
 
     return reply.send(metrics);
   }
+
+  static async getQueueMetrics(request: FastifyRequest, reply: FastifyReply) {
+    const metrics = await AdminService.getQueueMetrics();
+
+    return reply.send(metrics);
+  }
+
+  static async getWorkerMetrics(request: FastifyRequest, reply: FastifyReply) {
+    const metrics = await AdminService.getWorkerMetrics();
+
+    return reply.send(metrics);
+  }
 }

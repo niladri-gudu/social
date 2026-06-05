@@ -4,6 +4,7 @@ import { createRedisConnection, publisher } from "@repo/redis";
 import { NotificationService } from "@repo/notifications";
 import { realtimeNotificationSchema } from "@repo/events";
 import { prisma } from "@repo/db";
+import { redis, redisKeys } from "@repo/redis";
 
 const connection = createRedisConnection();
 
@@ -65,7 +66,9 @@ const events = new QueueEvents(QueueName.Notifications, {
   connection: createRedisConnection(),
 });
 
-worker.on("completed", (job) => {
+worker.on("completed", async (job) => {
+  await redis.incr(redisKeys.workerProcessedJobs);
+
   console.log(`notification job ${job.id} completed`);
 });
 
@@ -86,7 +89,9 @@ worker.on("failed", async (job, error) => {
   console.error(`notification job ${job?.id} failed`, error);
 });
 
-events.on("failed", ({ jobId, failedReason }) => {
+events.on("failed", async ({ jobId, failedReason }) => {
+  await redis.incr(redisKeys.workerFailedJobs);
+
   console.error(
     `notification job ${jobId} moved to failed state: ${failedReason}`,
   );
