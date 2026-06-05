@@ -7,32 +7,91 @@ export class AuthController {
   static async register(request: FastifyRequest, reply: FastifyReply) {
     const data = registerSchema.parse(request.body);
 
-    const result = await AuthService.register(data);
+    const { user, accessToken, refreshToken } =
+      await AuthService.register(data);
 
-    return reply.status(201).send(result);
+    reply.setCookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 15 * 60,
+    });
+
+    reply.setCookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    return reply.status(201).send({ user });
   }
 
   static async login(request: FastifyRequest, reply: FastifyReply) {
     const data = loginSchema.parse(request.body);
 
-    const result = await AuthService.login(data);
+    const { user, accessToken, refreshToken } = await AuthService.login(data);
 
-    return reply.send(result);
+    reply.setCookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 15 * 60,
+    });
+
+    reply.setCookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    return reply.send({ user });
   }
 
   static async refresh(request: FastifyRequest, reply: FastifyReply) {
-    const { refreshToken } = request.body as { refreshToken: string };
+    const refreshToken = request.cookies.refreshToken;
 
-    const result = await AuthService.refresh(refreshToken);
+    if (!refreshToken) {
+      return reply.status(401).send({ message: "Refresh token missing" });
+    }
 
-    return reply.send(result);
+    const { accessToken } = await AuthService.refresh(refreshToken);
+
+    reply.setCookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 15 * 60,
+    });
+
+    return reply.send({
+      success: true,
+    });
   }
 
   static async logout(request: FastifyRequest, reply: FastifyReply) {
-    const { refreshToken } = request.body as { refreshToken: string };
+    const refreshToken = request.cookies.refreshToken;
 
-    const result = await AuthService.logout(refreshToken);
+    if (refreshToken) {
+      await AuthService.logout(refreshToken);
+    }
 
-    return reply.send(result);
+    reply.clearCookie("accessToken", {
+      path: "/",
+    });
+
+    reply.clearCookie("refreshToken", {
+      path: "/",
+    });
+
+    return reply.send({
+      success: true,
+    });
   }
 }

@@ -6,15 +6,10 @@ export async function authMiddleware(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
-  const authHeader = request.headers.authorization;
+  const token = request.cookies.accessToken;
 
-  if (!authHeader) {
-    return reply.code(401).send({ message: "Unauthorized" });
-  }
-
-  const token = authHeader.split(" ")[1];
   if (!token) {
-    return reply.code(401).send({ message: "Unauthorized" });
+    throw new Error("Unauthorized");
   }
 
   try {

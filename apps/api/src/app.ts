@@ -1,4 +1,5 @@
-import Fastify, { fastify, FastifyReply, FastifyRequest } from "fastify";
+import Fastify from "fastify";
+import cookie from "@fastify/cookie";
 
 import { authRoutes } from "./modules/auth/auth.routes.js";
 import { userRoutes } from "./modules/user/user.routes.js";
@@ -17,6 +18,10 @@ import { registerBullBoard } from "./plugins/bull-board.js";
 
 export const app = Fastify({
   logger: true,
+});
+
+app.register(cookie, {
+  secret: process.env.COOKIE_SECRET,
 });
 
 app.get("/", async () => {

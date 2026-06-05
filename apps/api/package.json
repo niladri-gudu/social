@@ -12,6 +12,7 @@
   "dependencies": {
     "@bull-board/api": "^7.1.5",
     "@bull-board/fastify": "^7.1.5",
+    "@fastify/cookie": "^11.0.2",
     "@repo/auth": "workspace:^",
     "@repo/db": "workspace:^",
     "@repo/events": "workspace:^",
