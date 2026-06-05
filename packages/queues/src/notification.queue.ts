@@ -13,7 +13,7 @@ export const notificationQueue = new Queue(QueueName.Notifications, {
       delay: 1000,
     },
 
-    removeOnComplete: 100,
-    removeOnFail: 100,
+    removeOnComplete: 1000,
+    removeOnFail: 1000,
   },
 });

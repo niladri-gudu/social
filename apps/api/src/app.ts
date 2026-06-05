@@ -13,6 +13,8 @@ import { presenceRoutes } from "./modules/presence/presence.routes.js";
 import { adminRoutes } from "./modules/admin/admin.routes.js";
 import { healthRoutes } from "./modules/health/health.routes.js";
 
+import { registerBullBoard } from "./plugins/bull-board.js";
+
 export const app = Fastify({
   logger: true,
 });
@@ -82,3 +84,5 @@ app.setErrorHandler((error, request, reply) => {
     message: error instanceof Error ? error.message : "Unknown error",
   });
 });
+
+registerBullBoard(app);
