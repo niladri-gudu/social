@@ -19,6 +19,7 @@
     "@repo/presence": "workspace:^",
     "@repo/queues": "workspace:^",
     "@repo/redis": "workspace:^",
+    "@socket.io/redis-adapter": "^8.3.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^16.4.7",
     "fastify": "^5.8.5",

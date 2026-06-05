@@ -2,6 +2,8 @@ import { Server as HttpServer } from "http";
 import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
 import { PresenceService } from "@repo/presence";
+import { createAdapter } from "@socket.io/redis-adapter";
+import { publisher, subscriber } from "@repo/redis";
 
 export let io: Server;
 
@@ -11,6 +13,10 @@ export function initializeSocket(server: HttpServer) {
       origin: "*",
     },
   });
+
+  io.adapter(createAdapter(publisher, subscriber));
+
+  console.log("Redis Socket Adapter enabled");
 
   io.use((socket, next) => {
     const token = socket.handshake.auth.token;
